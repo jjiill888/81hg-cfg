@@ -1,0 +1,6 @@
+if SHIELD_81HG_KBD
+
+config ZMK_KEYBOARD_NAME
+    default "81HG_KBD"
+
+endif
