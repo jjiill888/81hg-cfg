@@ -1,5 +1,7 @@
 #include <dt-bindings/zmk/matrix_transform.h>
 #include <physical_layouts.dtsi>
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/input/input-event-codes.h>
 #include <zephyr/dt-bindings/adc/adc.h>
 #include <zephyr/dt-bindings/adc/nrf-saadc.h>
 
@@ -12,36 +14,49 @@
 
     kscan0: kscan_0 {
         compatible = "zmk,kscan-gpio-matrix";
-        label = "KSCAN";
         diode-direction = "col2row";
         wakeup-source;
 
         row-gpios
-            = <&gpio0 12 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>  // ROW0 - p0.12
-            , <&gpio0 7  (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>  // ROW1 - p0.07
-            , <&gpio0 15 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>  // ROW2 - p0.15
-            , <&gpio0 17 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>  // ROW3 - p0.17
-            , <&gpio0 20 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>  // ROW4 - p0.20
-            , <&gpio0 22 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>  // ROW5 - p0.22
+            = <&gpio0 12 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
+            , <&gpio0 7  (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
+            , <&gpio0 15 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
+            , <&gpio0 17 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
+            , <&gpio0 20 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
+            , <&gpio0 22 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
             ;
 
         col-gpios
-            = <&gpio1 6  GPIO_ACTIVE_HIGH>  // COL0  - P1.06
-            , <&gpio0 3  GPIO_ACTIVE_HIGH>  // COL1  - P0.03
-            , <&gpio0 9  GPIO_ACTIVE_HIGH>  // COL2  - P0.09
-            , <&gpio0 28 GPIO_ACTIVE_HIGH>  // COL3  - P0.28
-            , <&gpio1 4  GPIO_ACTIVE_HIGH>  // COL4  - P1.04
-            , <&gpio1 2  GPIO_ACTIVE_HIGH>  // COL5  - P1.02
-            , <&gpio1 9  GPIO_ACTIVE_HIGH>  // COL6  - P1.09
-            , <&gpio0 8  GPIO_ACTIVE_HIGH>  // COL7  - P0.08
-            , <&gpio0 5  GPIO_ACTIVE_HIGH>  // COL8  - P0.05
-            , <&gpio0 30 GPIO_ACTIVE_HIGH>  // COL9  - P0.30
-            , <&gpio0 31 GPIO_ACTIVE_HIGH>  // COL10 - P0.31
-            , <&gpio0 29 GPIO_ACTIVE_HIGH>  // COL11 - P0.29
-            , <&gpio0 2  GPIO_ACTIVE_HIGH>  // COL12 - P0.02
-            , <&gpio1 0  GPIO_ACTIVE_HIGH>  // COL13 - P1.00
-            , <&gpio1 13 GPIO_ACTIVE_HIGH>  // COL14 - P1.13
+            = <&gpio1 6  GPIO_ACTIVE_HIGH>
+            , <&gpio0 3  GPIO_ACTIVE_HIGH>
+            , <&gpio0 9  GPIO_ACTIVE_HIGH>
+            , <&gpio0 28 GPIO_ACTIVE_HIGH>
+            , <&gpio1 4  GPIO_ACTIVE_HIGH>
+            , <&gpio1 2  GPIO_ACTIVE_HIGH>
+            , <&gpio1 9  GPIO_ACTIVE_HIGH>
+            , <&gpio0 8  GPIO_ACTIVE_HIGH>
+            , <&gpio0 5  GPIO_ACTIVE_HIGH>
+            , <&gpio0 30 GPIO_ACTIVE_HIGH>
+            , <&gpio0 31 GPIO_ACTIVE_HIGH>
+            , <&gpio0 29 GPIO_ACTIVE_HIGH>
+            , <&gpio0 2  GPIO_ACTIVE_HIGH>
+            , <&gpio1 0  GPIO_ACTIVE_HIGH>
+            , <&gpio1 13 GPIO_ACTIVE_HIGH>
             ;
+    };
+
+    gpio_keys: gpio_keys {
+        compatible = "gpio-keys";
+
+        joystick_sw: joystick_sw {
+            gpios = <&gpio0 10 GPIO_ACTIVE_HIGH>;
+            zephyr,code = <INPUT_KEY_0>;
+        };
+    };
+
+    joystick_listener: joystick_listener {
+        compatible = "zmk,input-listener";
+        device = <&gpio_keys>;
     };
 
     default_transform: matrix_transform {
@@ -64,7 +79,7 @@
         display-name = "Default";
         transform = <&default_transform>;
 
-        keys  //                     w   h    x    y     rot    rx    ry
+        keys
             = <&key_physical_attrs 100 100    0    0       0     0     0>
             , <&key_physical_attrs 100 100  100    0       0     0     0>
             , <&key_physical_attrs 100 100  200    0       0     0     0>
@@ -135,16 +150,16 @@
             , <&key_physical_attrs 100 100 1200  400       0     0     0>
             , <&key_physical_attrs 100 100 1300  400       0     0     0>
             , <&key_physical_attrs 100 100 1400  400       0     0     0>
-            , <&key_physical_attrs 125 100    0  500       0     0     0>  
-            , <&key_physical_attrs 125 100  125  500       0     0     0>  
-            , <&key_physical_attrs 125 100  250  500       0     0     0>  
-            , <&key_physical_attrs 200 100  375  500       0     0     0>  
-            , <&key_physical_attrs 200 100  800  500       0     0     0> 
-            , <&key_physical_attrs 100 100 1000  500       0     0     0>  
-            , <&key_physical_attrs 100 100 1100  500       0     0     0>  
-            , <&key_physical_attrs 100 100 1200  500       0     0     0>  
-            , <&key_physical_attrs 100 100 1300  500       0     0     0>  
-            , <&key_physical_attrs 100 100 1400  500       0     0     0> 
+            , <&key_physical_attrs 125 100    0  500       0     0     0>
+            , <&key_physical_attrs 125 100  125  500       0     0     0>
+            , <&key_physical_attrs 125 100  250  500       0     0     0>
+            , <&key_physical_attrs 200 100  375  500       0     0     0>
+            , <&key_physical_attrs 200 100  800  500       0     0     0>
+            , <&key_physical_attrs 100 100 1000  500       0     0     0>
+            , <&key_physical_attrs 100 100 1100  500       0     0     0>
+            , <&key_physical_attrs 100 100 1200  500       0     0     0>
+            , <&key_physical_attrs 100 100 1300  500       0     0     0>
+            , <&key_physical_attrs 100 100 1400  500       0     0     0>
             ;
     };
 };

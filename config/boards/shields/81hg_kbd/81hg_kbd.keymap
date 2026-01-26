@@ -1,8 +1,10 @@
 #define ZMK_BEHAVIORS_KEEP_ALL
 
+#include <dt-bindings/input/input-event-codes.h>
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/bt.h>
+#include <dt-bindings/zmk/mouse.h>
 
 / {
     combos {
@@ -19,6 +21,16 @@
             timeout-ms = <50>;
             key-positions = <0 1>;
             bindings = <&studio_unlock>;
+        };
+    };
+
+    macros {
+        lclick: lclick {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            wait-ms = <50>;
+            tap-ms = <0>;
+            bindings = <&macro_press &mkp LCLK>, <&macro_release &mkp LCLK>;
         };
     };
 
@@ -49,4 +61,16 @@
             >;
         };
     };
+
+    joystick_sw_processor: joystick_sw_processor {
+        compatible = "zmk,input-processor-behaviors";
+        #input-processor-cells = <0>;
+        type = <INPUT_EV_KEY>;
+        codes = <INPUT_KEY_0>;
+        bindings = <&lclick>;
+    };
+};
+
+&joystick_listener {
+    input-processors = <&joystick_sw_processor>;
 };
