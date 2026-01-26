@@ -24,16 +24,6 @@
         };
     };
 
-    macros {
-        lclick: lclick {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            wait-ms = <50>;
-            tap-ms = <0>;
-            bindings = <&macro_press &mkp LCLK>, <&macro_release &mkp LCLK>;
-        };
-    };
-
     keymap {
         compatible = "zmk,keymap";
 
@@ -67,7 +57,7 @@
         #input-processor-cells = <0>;
         type = <INPUT_EV_KEY>;
         codes = <INPUT_KEY_0>;
-        bindings = <&lclick>;
+        bindings = <&mkp LCLK>;
     };
 };
 

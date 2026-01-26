@@ -47,9 +47,10 @@
 
     gpio_keys: gpio_keys {
         compatible = "gpio-keys";
+        // debounce-interval-ms = <15>;
 
         joystick_sw: joystick_sw {
-            gpios = <&gpio0 10 GPIO_ACTIVE_HIGH>;
+            gpios = <&gpio0 10 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
             zephyr,code = <INPUT_KEY_0>;
         };
     };
