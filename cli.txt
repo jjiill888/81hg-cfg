@@ -5,5 +5,5 @@ export ZEPHYR_SDK_INSTALL_DIR=$HOME/zephyr-sdk-0.17.4
 
 
 
-cd zmk/app
+cd app
  west build -p auto   -b nrfmicro/nrf52840   -d build/81hg   -- -DSHIELD=81hg_kbd      -DZMK_CONFIG=$HOME/Desktop/zmk-config/config
