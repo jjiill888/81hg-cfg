@@ -52,15 +52,4 @@
         };
     };
 
-    joystick_sw_processor: joystick_sw_processor {
-        compatible = "zmk,input-processor-behaviors";
-        #input-processor-cells = <0>;
-        type = <INPUT_EV_KEY>;
-        codes = <INPUT_KEY_0>;
-        bindings = <&mkp LCLK>;
-    };
-};
-
-&joystick_listener {
-    input-processors = <&joystick_sw_processor>;
 };
