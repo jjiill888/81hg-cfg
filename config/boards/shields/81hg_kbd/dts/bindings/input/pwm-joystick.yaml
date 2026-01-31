@@ -1,0 +1,47 @@
+# Copyright (c) 2025 The ZMK Contributors
+# SPDX-License-Identifier: MIT
+
+description: |
+  PWM duty-cycle based joystick input driver.
+  Reads 1 kHz PWM signals from a GP9101F1K converter and translates
+  duty-cycle deviations into relative mouse movements.
+
+compatible: "pwm-joystick"
+
+properties:
+  x-gpios:
+    type: phandle-array
+    required: true
+    description: GPIO connected to X-axis PWM output
+
+  y-gpios:
+    type: phandle-array
+    required: true
+    description: GPIO connected to Y-axis PWM output
+
+  poll-period-ms:
+    type: int
+    default: 10
+    description: Milliseconds between each movement report
+
+  deadzone-pct:
+    type: int
+    default: 5
+    description: Dead zone as percentage of full duty-cycle range
+
+  speed-scale:
+    type: int
+    default: 3
+    description: Movement speed multiplier
+
+  invert-x:
+    type: boolean
+    description: Invert X-axis direction
+
+  invert-y:
+    type: boolean
+    description: Invert Y-axis direction
+
+  swap-xy:
+    type: boolean
+    description: Swap X and Y axes

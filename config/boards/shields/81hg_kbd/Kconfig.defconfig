@@ -3,4 +3,10 @@ if SHIELD_81HG_KBD
 config ZMK_KEYBOARD_NAME
     default "81HG_KBD"
 
+config INPUT_PWM_JOYSTICK
+    bool "PWM duty-cycle joystick input driver"
+    default y
+    depends on GPIO
+    depends on DT_HAS_PWM_JOYSTICK_ENABLED
+
 endif

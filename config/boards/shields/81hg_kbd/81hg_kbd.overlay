@@ -168,6 +168,23 @@
 };
 
 / {
+    joystick: joystick {
+        compatible = "pwm-joystick";
+        x-gpios = <&gpio1 10 GPIO_ACTIVE_HIGH>;
+        y-gpios = <&gpio1 11 GPIO_ACTIVE_HIGH>;
+        poll-period-ms = <10>;
+        deadzone-pct = <8>;
+        speed-scale = <2>;
+        invert-x;
+    };
+
+    joystick_listener: joystick_listener {
+        compatible = "zmk,input-listener";
+        device = <&joystick>;
+    };
+};
+
+/ {
     vbatt: vbatt {
         compatible = "zmk,battery-voltage-divider";
         io-channels = <&adc 2>;
