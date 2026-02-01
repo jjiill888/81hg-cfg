@@ -3,8 +3,8 @@
  * SPDX-License-Identifier: MIT
  *
  * PWM duty-cycle joystick driver for GP9101F1K-based analog sticks.
- * Uses burst-sampling (polling GPIO levels over one PWM period) instead
- * of GPIO edge interrupts, avoiding GPIOTE channel exhaustion on nRF52840.
+ * Uses burst-sampling (polling GPIO levels over one PWM period) WITHOUT
+ * disabling interrupts, so BLE stack is never blocked.
  */
 
 #define DT_DRV_COMPAT pwm_joystick
@@ -25,7 +25,8 @@ LOG_MODULE_REGISTER(pwm_joystick, CONFIG_ZMK_LOG_LEVEL);
  *
  * Burst-sampling: continuously read GPIO level in a tight loop for ~1.1 ms,
  * count high-level samples as a fraction of total samples to get duty cycle.
- * nRF52840 @ 64 MHz can sample 2000+ times in 1.1 ms, sufficient precision.
+ * Interrupts remain ENABLED so BLE is never blocked.
+ * BLE ISRs (~10-50 μs) cause minor sampling gaps that the filter handles.
  */
 
 #define DUTY_SCALE      10000   /* 0.01% precision */
@@ -85,7 +86,7 @@ static uint16_t measure_duty(const struct gpio_dt_spec *gpio)
     uint32_t high_count = 0;
     uint32_t total_count = 0;
 
-    unsigned int key = irq_lock();
+    /* NO irq_lock() — BLE interrupts stay enabled */
 
     uint32_t start = k_cycle_get_32();
     uint32_t duration_cycles = (uint32_t)(
@@ -98,8 +99,6 @@ static uint16_t measure_duty(const struct gpio_dt_spec *gpio)
         }
         total_count++;
     }
-
-    irq_unlock(key);
 
     if (total_count == 0) {
         return 5000; /* fallback: 50% */
@@ -143,7 +142,7 @@ static void poll_work_handler(struct k_work *work)
     uint16_t raw_y = measure_duty(&cfg->y_gpio);
 
     static uint8_t dbg_cnt;
-    if (++dbg_cnt >= 100) {          /* Print approximately once per second */
+    if (++dbg_cnt >= (1000 / cfg->poll_period_ms)) {
         dbg_cnt = 0;
         LOG_INF("raw X=%u Y=%u  center X=%u Y=%u",
                 raw_x, raw_y,
@@ -247,7 +246,7 @@ static int pwm_joystick_init(const struct device *dev)
     k_work_init_delayable(&data->poll_work, poll_work_handler);
     k_work_schedule(&data->poll_work, K_MSEC(500)); /* Startup delay */
 
-    LOG_INF("PWM joystick initialized (burst-sampling mode)");
+    LOG_INF("PWM joystick initialized (burst-sampling, interrupts enabled)");
     return 0;
 }
 
