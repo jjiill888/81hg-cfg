@@ -173,7 +173,7 @@
         x-gpios = <&gpio1 10 GPIO_ACTIVE_HIGH>;
         y-gpios = <&gpio1 11 GPIO_ACTIVE_HIGH>;
         poll-period-ms = <20>;
-        deadzone-pct = <12>;
+        deadzone-pct = <10>;
         speed-scale = <3>;
         invert-x;
     };

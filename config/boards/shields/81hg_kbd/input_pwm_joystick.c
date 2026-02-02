@@ -14,6 +14,7 @@
 #include <zephyr/input/input.h>
 #include <zephyr/kernel.h>
 #include <zephyr/logging/log.h>
+#include <zephyr/pm/device.h>
 
 LOG_MODULE_REGISTER(pwm_joystick, CONFIG_ZMK_LOG_LEVEL);
 
@@ -250,6 +251,40 @@ static int pwm_joystick_init(const struct device *dev)
     return 0;
 }
 
+/* ---- Power management: suspend/resume for deep sleep ---- */
+
+static int pwm_joystick_pm_action(const struct device *dev, enum pm_device_action action)
+{
+    struct pwm_joystick_data *data = dev->data;
+    const struct pwm_joystick_config *cfg = dev->config;
+
+    switch (action) {
+    case PM_DEVICE_ACTION_SUSPEND:
+        k_work_cancel_delayable(&data->poll_work);
+        /* Disconnect GPIO pins to prevent PWM signals from interfering
+         * with the nRF52 DETECT mechanism during System OFF (deep sleep).
+         * Without this, the GP9101's continuous PWM output on these input
+         * pins generates spurious DETECT events on gpio1, blocking
+         * wake-up from the keyboard matrix on gpio0. */
+        gpio_pin_configure_dt(&cfg->x_gpio, GPIO_DISCONNECTED);
+        gpio_pin_configure_dt(&cfg->y_gpio, GPIO_DISCONNECTED);
+        LOG_INF("PWM joystick suspended (GPIOs disconnected)");
+        return 0;
+    case PM_DEVICE_ACTION_RESUME:
+        /* Reconfigure GPIO pins as inputs before restarting polling */
+        gpio_pin_configure_dt(&cfg->x_gpio, GPIO_INPUT);
+        gpio_pin_configure_dt(&cfg->y_gpio, GPIO_INPUT);
+        data->calibrated = false;
+        memset(&data->x_axis, 0, sizeof(struct axis_state));
+        memset(&data->y_axis, 0, sizeof(struct axis_state));
+        k_work_schedule(&data->poll_work, K_MSEC(500));
+        LOG_INF("PWM joystick resumed");
+        return 0;
+    default:
+        return -ENOTSUP;
+    }
+}
+
 #define PWM_JOYSTICK_INST(n)                                                    \
     static struct pwm_joystick_data pwm_joystick_data_##n = {};                 \
     static const struct pwm_joystick_config pwm_joystick_cfg_##n = {            \
@@ -262,7 +297,9 @@ static int pwm_joystick_init(const struct device *dev)
         .invert_y = DT_INST_PROP(n, invert_y),                                 \
         .swap_xy = DT_INST_PROP(n, swap_xy),                                    \
     };                                                                          \
-    DEVICE_DT_INST_DEFINE(n, pwm_joystick_init, NULL,                           \
+    PM_DEVICE_DT_INST_DEFINE(n, pwm_joystick_pm_action);                        \
+    DEVICE_DT_INST_DEFINE(n, pwm_joystick_init,                                 \
+                          PM_DEVICE_DT_INST_GET(n),                             \
                           &pwm_joystick_data_##n, &pwm_joystick_cfg_##n,        \
                           POST_KERNEL, CONFIG_INPUT_INIT_PRIORITY, NULL);
 
