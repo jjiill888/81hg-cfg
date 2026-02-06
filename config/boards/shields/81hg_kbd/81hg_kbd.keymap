@@ -5,6 +5,7 @@
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/bt.h>
 #include <dt-bindings/zmk/mouse.h>
+#include <dt-bindings/zmk/outputs.h>
 
 / {
     behaviors {
@@ -15,6 +16,34 @@
             tapping-term-ms = <200>;
             quick-tap-ms = <150>;
             bindings = <&mkp>, <&mkp>;
+        };
+    };
+
+    macros {
+        bt_sel_0: bt_sel_0 {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&out OUT_BLE>, <&bt BT_SEL 0>;
+        };
+        bt_sel_1: bt_sel_1 {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&out OUT_BLE>, <&bt BT_SEL 1>;
+        };
+        bt_sel_2: bt_sel_2 {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&out OUT_BLE>, <&bt BT_SEL 2>;
+        };
+        bt_sel_3: bt_sel_3 {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&out OUT_BLE>, <&bt BT_SEL 3>;
+        };
+        bt_sel_4: bt_sel_4 {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&out OUT_BLE>, <&bt BT_SEL 4>;
         };
     };
 
@@ -53,8 +82,8 @@
         function_layer {
             display-name = "Function";
             bindings = <
-&bt BT_CLR  &bt BT_SEL 0 &kp C_VOL_DN &kp C_VOL_UP &kp C_MUTE &trans  &trans     &trans     &trans &trans &trans &trans &trans &trans     &kp DEL
-&trans &bt BT_SEL 0       &bt BT_SEL 1      &bt BT_SEL 2   &bt BT_SEL 3   &bt BT_SEL 4       &trans     &trans     &trans &trans &trans &trans &trans &trans
+&bt BT_CLR  &trans &kp C_VOL_DN &kp C_VOL_UP &kp C_MUTE &trans  &trans     &trans     &trans &trans &trans &trans &trans &trans     &kp DEL
+&out OUT_TOG &bt_sel_0       &bt_sel_1      &bt_sel_2   &bt_sel_3   &bt_sel_4   &trans   &trans     &trans &trans &trans &trans &trans &trans
 &trans &trans       &trans       &trans       &sys_reset   &trans       &trans     &trans     &trans &trans &trans &trans &trans &trans
 &trans &trans       &trans       &trans       &trans       &trans       &trans     &trans     &trans &trans &trans &trans &trans
 &trans &trans       &trans       &trans       &trans       &trans       &bt BT_NXT &bt BT_PRV &trans &trans &trans &trans &trans &trans
