@@ -9,13 +9,20 @@
 
 / {
     behaviors {
-        js_click: joystick_multi_click {
-            compatible = "zmk,behavior-hold-tap";
-            #binding-cells = <2>;
-            flavor = "tap-preferred";
-            tapping-term-ms = <200>;
-            quick-tap-ms = <150>;
-            bindings = <&mkp>, <&mkp>;
+        js_click: joystick_click {
+            compatible = "zmk,behavior-mod-morph";
+            #binding-cells = <0>;
+            bindings = <&js_inner>, <&mkp MCLK>;
+            mods = <(MOD_LSFT|MOD_RSFT)>;
+            //mods = <(MOD_LSFT|MOD_RSFT)>;
+        };
+
+        js_inner: joystick_inner {
+            compatible = "zmk,behavior-mod-morph";
+            #binding-cells = <0>;
+            bindings = <&mkp LCLK>, <&mkp RCLK>;
+            mods = <(MOD_LCTL|MOD_RCTL)>;
+            //mods = <(MOD_LCTL|MOD_RCTL)>;
         };
     };
 

@@ -58,7 +58,7 @@
 
         joystick_click {
             column = <0>;
-            bindings = <&js_click RCLK LCLK>;
+            bindings = <&js_click>;
         };
     };
 

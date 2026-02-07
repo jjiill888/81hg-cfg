@@ -297,7 +297,7 @@ static int pwm_joystick_pm_action(const struct device *dev, enum pm_device_actio
         .invert_y = DT_INST_PROP(n, invert_y),                                 \
         .swap_xy = DT_INST_PROP(n, swap_xy),                                    \
     };                                                                          \
-    /* PM disabled for debugging - test if PM action causes system hang */      \
+    /* PM disabled - enabling causes wake-up failure */                           \
     DEVICE_DT_INST_DEFINE(n, pwm_joystick_init,                                 \
                           NULL,                                                  \
                           &pwm_joystick_data_##n, &pwm_joystick_cfg_##n,        \
