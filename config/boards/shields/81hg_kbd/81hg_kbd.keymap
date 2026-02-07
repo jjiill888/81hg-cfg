@@ -9,20 +9,26 @@
 
 / {
     behaviors {
+        space_ht: space_hold_tap {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            flavor = "balanced";
+            tapping-term-ms = <200>;
+            bindings = <&kp>, <&kp>;
+        };
+
         js_click: joystick_click {
             compatible = "zmk,behavior-mod-morph";
             #binding-cells = <0>;
-            bindings = <&js_inner>, <&mkp MCLK>;
-            mods = <(MOD_LSFT|MOD_RSFT)>;
-            //mods = <(MOD_LSFT|MOD_RSFT)>;
+            bindings = <&js_inner>, <&mkp RCLK>;
+            mods = <(MOD_LSFT)>;
         };
 
         js_inner: joystick_inner {
             compatible = "zmk,behavior-mod-morph";
             #binding-cells = <0>;
-            bindings = <&mkp LCLK>, <&mkp RCLK>;
+            bindings = <&mkp LCLK>, <&mkp MCLK>;
             mods = <(MOD_LCTL|MOD_RCTL)>;
-            //mods = <(MOD_LCTL|MOD_RCTL)>;
         };
     };
 
@@ -82,7 +88,7 @@
 &kp TAB   &kp Q     &kp W     &kp E     &kp R     &kp T     &kp Y     &kp U     &kp I     &kp O     &kp P     &kp LBKT  &kp RBKT  &kp BSLH
 &kp CAPS  &kp A     &kp S     &kp D     &kp F     &kp G     &kp H     &kp J     &kp K     &kp L     &kp SEMI  &kp SQT   &kp RET
 &kp LSHFT &kp Z     &kp X     &kp C     &kp V     &kp B     &kp N     &kp M     &kp COMMA &kp DOT   &kp SLASH &kp RSHFT &kp UP    &kp DEL
-&kp LCTRL &kp LGUI  &kp LALT  &kp SPACE &kp SPACE &mo 1     &kp RCTRL &kp LEFT  &kp DOWN  &kp RIGHT
+&kp LCTRL &kp LGUI  &kp LALT  &space_ht LSHFT SPACE &kp SPACE &mo 1     &kp RCTRL &kp LEFT  &kp DOWN  &kp RIGHT
             >;
         };
 
