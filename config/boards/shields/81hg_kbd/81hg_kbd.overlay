@@ -11,6 +11,7 @@
         zmk,kscan = &kscan0;
         zmk,physical-layout = &physical_layout;
         zmk,battery = &vbatt;
+        zmk,studio-rpc-uart = &studio_rpc_uart;
     };
 
     kscan0: kscan_0 {
@@ -81,6 +82,7 @@
         compatible = "zmk,physical-layout";
         display-name = "Default";
         transform = <&default_transform>;
+        kscan = <&kscan0>;
 
         keys
             = <&key_physical_attrs 100 100    0    0       0     0     0>
@@ -195,4 +197,10 @@
 
 &adc {
     status = "okay";
+};
+
+&zephyr_udc0 {
+    studio_rpc_uart: studio_rpc_uart {
+        compatible = "zephyr,cdc-acm-uart";
+    };
 };

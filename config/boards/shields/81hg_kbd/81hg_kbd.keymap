@@ -95,7 +95,7 @@
         function_layer {
             display-name = "Function";
             bindings = <
-&bt BT_CLR  &trans &kp C_VOL_DN &kp C_VOL_UP &kp C_MUTE &trans  &trans     &trans     &trans &trans &trans &trans &trans &trans     &kp DEL
+&bt BT_CLR  &trans &kp C_VOL_DN &kp C_VOL_UP &kp C_MUTE &trans  &trans     &trans     &trans &kp C_PLAY_PAUSE &trans &trans &trans &trans     &kp DEL
 &out OUT_TOG &bt_sel_0       &bt_sel_1      &bt_sel_2   &bt_sel_3   &bt_sel_4   &trans   &trans     &trans &trans &trans &trans &trans &trans
 &trans &trans       &trans       &trans       &sys_reset   &trans       &trans     &trans     &trans &trans &trans &trans &trans &trans
 &trans &trans       &trans       &trans       &trans       &trans       &trans     &trans     &trans &trans &trans &trans &trans
