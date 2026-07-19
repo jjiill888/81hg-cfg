@@ -29,10 +29,26 @@ properties:
     default: 5
     description: Dead zone as percentage of full duty-cycle range
 
-  speed-scale:
+  slow-gain:
     type: int
-    default: 3
-    description: Movement speed multiplier
+    default: 26
+    description: |
+      Linear gain of the slow (precision) zone, in 1/100 subpixel per
+      duty-cycle unit per poll. Higher = faster slow-zone cursor.
+
+  knee:
+    type: int
+    default: 1200
+    description: |
+      Deflection (duty-cycle units past the deadzone) where the fast
+      quadratic zone starts. Lower = acceleration kicks in earlier.
+
+  fast-gain-div:
+    type: int
+    default: 280
+    description: |
+      Divisor of the quadratic fast-zone term. Lower = stronger
+      acceleration / higher top speed.
 
   invert-x:
     type: boolean

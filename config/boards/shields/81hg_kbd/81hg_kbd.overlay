@@ -175,8 +175,10 @@
         x-gpios = <&gpio1 10 GPIO_ACTIVE_HIGH>;
         y-gpios = <&gpio1 11 GPIO_ACTIVE_HIGH>;
         poll-period-ms = <8>;
-        deadzone-pct = <10>;
-        speed-scale = <3>;
+        deadzone-pct = <4>;
+        slow-gain = <38>;       /* 慢速区线性增益: 越大慢速越快 */
+        knee = <1400>;          /* 加速区起点: 越小加速越早 */
+        fast-gain-div = <450>;  /* 加速强度: 越小冲刺越快 */
         invert-x;
     };
 
